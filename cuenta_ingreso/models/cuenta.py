@@ -7,29 +7,6 @@ class ResPartner(models.Model):
     income_account_id = fields.Many2one('account.account', string='Cuenta de Ingreso', domain=[('account_type', '=', 'income')], options={'no_create': True}, groups="account.group_account_readonly")
 
 
-class AccountInvoice(models.Model):
-    _inherit = 'account.move'
-
-    is_sale_order = fields.Boolean(string='Es una venta', compute='_compute_is_sale_order', store=True)
-
-    @api.depends('invoice_origin')
-    def _compute_is_sale_order(self):
-        for invoice in self:
-            invoice.is_sale_order = bool(invoice.invoice_origin)
-
-
-class SaleOrder(models.Model):
-    _inherit = 'sale.order.line'
-
-    income_account_id = fields.Many2one(
-        'account.account',
-        string='Cuenta de Ingreso del Cliente',
-        related='order_id.partner_id.income_account_id',
-        store=True,
-        readonly=False,
-    )
-
-
 class AccountInvoiceLine(models.Model):
     _inherit = 'account.move.line'
 
@@ -38,12 +15,11 @@ class AccountInvoiceLine(models.Model):
         if self.move_id:
             # Verificar si el documento es una factura de cliente o una nota de crédito de cliente
             if self.move_id.move_type in ['out_invoice', 'out_refund']:
-                if move_id.is_sale_order:
-                    # Si es una venta, copiar la cuenta de ingreso del cliente al campo account_id
-                   account_id = move_id.partner_id.income_account_id
-                elif self.partner_id and self.display_type not in ['line_section', 'line_note']:
-                    # Si no es una venta, aplicar la lógica original
+                if self.partner_id and self.display_type not in ['line_section', 'line_note']:
+                    # Obtener la cuenta de ingresos asociada al cliente
                     income_account = self.partner_id.income_account_id
+
+                    # Configurar la cuenta contable por defecto en función de la cuenta de ingresos del cliente
                     if income_account:
                         self.account_id = income_account
                     else:
