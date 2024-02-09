@@ -2,7 +2,7 @@
 
 ## Description
 
-This Odoo module enables users to select an income account for contacts. The selected income account will be reflected first in the customer invoice and associated credit note.
+This Odoo module enables users to select an income account for contacts. The selected income account will be reflected first in the customer invoice and associated credit note. Additionally, it extends to sales orders, allowing users to associate income accounts with sales orders, ensuring consistency throughout the sales process.
 
 ## Requirements
 
