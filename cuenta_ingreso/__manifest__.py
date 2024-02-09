@@ -1,7 +1,7 @@
 {
     'name': 'Income Account',
     'description': """This module adds a field to contacts for income account and changes the default on invoice lines. It also extends to sales order lines.""",
-    'author': 'Numilen Monzon Soledad',
+    'author': 'GECONS SAS',
     'price': 250.00,
     'currency': 'USD',
     'version': '1.0',
